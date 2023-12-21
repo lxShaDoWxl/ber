@@ -1,3 +1,3 @@
-module github.com/geoffgarside/ber
+module github.com/lxShaDoWxl/ber
 
 go 1.13
