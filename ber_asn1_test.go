@@ -422,11 +422,11 @@ func newBool(b bool) *bool { return &b }
 
 var parseFieldParametersTestData []parseFieldParametersTest = []parseFieldParametersTest{
 	{"", fieldParameters{}},
-	{"ia5", fieldParameters{stringType: tagIA5String}},
-	{"generalized", fieldParameters{timeType: tagGeneralizedTime}},
-	{"utc", fieldParameters{timeType: tagUTCTime}},
-	{"printable", fieldParameters{stringType: tagPrintableString}},
-	{"numeric", fieldParameters{stringType: tagNumericString}},
+	{"ia5", fieldParameters{stringType: asn1.TagIA5String}},
+	{"generalized", fieldParameters{timeType: asn1.TagGeneralizedTime}},
+	{"utc", fieldParameters{timeType: asn1.TagUTCTime}},
+	{"printable", fieldParameters{stringType: asn1.TagPrintableString}},
+	{"numeric", fieldParameters{stringType: asn1.TagNumericString}},
 	{"optional", fieldParameters{optional: true}},
 	{"explicit", fieldParameters{explicit: true, tag: new(int)}},
 	{"application", fieldParameters{application: true, tag: new(int)}},

@@ -5,37 +5,10 @@
 package ber
 
 import (
+	"encoding/asn1"
 	"reflect"
 	"strconv"
 	"strings"
-)
-
-const (
-	tagBoolean         = 1
-	tagInteger         = 2
-	tagBitString       = 3
-	tagOctetString     = 4
-	tagNull            = 5
-	tagOID             = 6
-	tagEnum            = 10
-	tagUTF8String      = 12
-	tagSequence        = 16
-	tagSet             = 17
-	tagNumericString   = 18
-	tagPrintableString = 19
-	tagT61String       = 20
-	tagIA5String       = 22
-	tagUTCTime         = 23
-	tagGeneralizedTime = 24
-	tagGeneralString   = 27
-	tagBMPString       = 30
-)
-
-const (
-	classUniversal       = 0
-	classApplication     = 1
-	classContextSpecific = 2
-	classPrivate         = 3
 )
 
 type tagAndLength struct {
@@ -93,17 +66,17 @@ func parseFieldParameters(str string) (ret fieldParameters) {
 				ret.tag = new(int)
 			}
 		case part == "generalized":
-			ret.timeType = tagGeneralizedTime
+			ret.timeType = asn1.TagGeneralizedTime
 		case part == "utc":
-			ret.timeType = tagUTCTime
+			ret.timeType = asn1.TagUTCTime
 		case part == "ia5":
-			ret.stringType = tagIA5String
+			ret.stringType = asn1.TagIA5String
 		case part == "printable":
-			ret.stringType = tagPrintableString
+			ret.stringType = asn1.TagPrintableString
 		case part == "numeric":
-			ret.stringType = tagNumericString
+			ret.stringType = asn1.TagNumericString
 		case part == "utf8":
-			ret.stringType = tagUTF8String
+			ret.stringType = asn1.TagUTF8String
 		case strings.HasPrefix(part, "default:"):
 			i, err := strconv.ParseInt(part[8:], 10, 64)
 			if err == nil {
@@ -142,33 +115,33 @@ func getUniversalType(t reflect.Type) (matchAny bool, tagNumber int, isCompound,
 	case rawValueType:
 		return true, -1, false, true
 	case objectIdentifierType:
-		return false, tagOID, false, true
+		return false, asn1.TagOID, false, true
 	case bitStringType:
-		return false, tagBitString, false, true
+		return false, asn1.TagBitString, false, true
 	case timeType:
-		return false, tagUTCTime, false, true
+		return false, asn1.TagUTCTime, false, true
 	case enumeratedType:
-		return false, tagEnum, false, true
+		return false, asn1.TagEnum, false, true
 	case bigIntType:
-		return false, tagInteger, false, true
+		return false, asn1.TagInteger, false, true
 	}
 	switch t.Kind() {
 	case reflect.Bool:
-		return false, tagBoolean, false, true
+		return false, asn1.TagBoolean, false, true
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return false, tagInteger, false, true
+		return false, asn1.TagInteger, false, true
 	case reflect.Struct:
-		return false, tagSequence, true, true
+		return false, asn1.TagSequence, true, true
 	case reflect.Slice:
 		if t.Elem().Kind() == reflect.Uint8 {
-			return false, tagOctetString, false, true
+			return false, asn1.TagOctetString, false, true
 		}
 		if strings.HasSuffix(t.Name(), "SET") {
-			return false, tagSet, true, true
+			return false, asn1.TagSet, true, true
 		}
-		return false, tagSequence, true, true
+		return false, asn1.TagSequence, true, true
 	case reflect.String:
-		return false, tagPrintableString, false, true
+		return false, asn1.TagPrintableString, false, true
 	}
 	return false, 0, false, false
 }
